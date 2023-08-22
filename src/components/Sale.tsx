@@ -6,34 +6,49 @@ import SaleNavbar from "./SaleNavbar";
 import Purchase from "./Purchase";
 import { useFormik } from "formik";
 import toast from "react-hot-toast";
-import { useContract, useTransferToken, useBalance, Web3Button } from "@thirdweb-dev/react";
-
+import {
+  useContract,
+  useTransferToken,
+  useBalance,
+  Web3Button,
+  useConnectionStatus,
+} from "@thirdweb-dev/react";
 
 const Sale = () => {
+  const connectionStatus = useConnectionStatus();
+  console.log(connectionStatus, "connectionStatus");
+
   const [show, setShow] = useState(false);
   const [leftTokens, setLeftTokens] = useState(0);
   const [userAllocation, setUserAllocation] = useState(0);
   const [referalLink] = useState("https://randomz.com/E620001");
   const [showTransactionModal, setShowTransactionModal] = useState(false);
 
-
   const contractAddress = "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd";
   const toAddress = "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd";
   const { data, isLoading } = useBalance(contractAddress);
 
   const { contract } = useContract(contractAddress);
-  const {
-    mutate: transferTokens,
-  } = useTransferToken(contract);
+  const { mutateAsync: transferTokens, isSuccess } = useTransferToken(contract);
 
   const transferAmt = async () => {
-    transferTokens({
-      to: toAddress, // Address to transfer to
-      amount: values.BNB, // Amount to transfer
-    })
-  }
+    try {
+      const data = await transferTokens({
+        to: toAddress, // Address to transfer to
+        amount: values.BNB, // Amount to transfer
+      })
+      if (data.receipt.status === 1) {
+        toast.success("Transaction successful");
+        purchaseRequest(data.receipt.blockHash,data.receipt.transactionHash);
+      }
+      console.log(data, "data");
+    } catch (error) {
+      toast.error("Transaction failed");
+      console.log(error, "error");
+    }
+  };
 
-
+  console.log(isSuccess, "isSuccess");
 
   const closeModal = () => {
     setShowTransactionModal(false);
@@ -48,7 +63,6 @@ const Sale = () => {
       },
       onSubmit: () => {
         transferAmt();
-        handle_purchase();
       },
     });
 
@@ -75,13 +89,13 @@ const Sale = () => {
     }
   };
 
-  const purchaseRequest = async () => {
+  const purchaseRequest = async (sentFromaccount:string , TransactionHash:string) => {
     try {
       const { status } = await axios.post(
         `${process.env.VITE_SERVER_URL}/users/addTransaction`,
         {
-          txid: "asdasd12312321s",
-          account: "0asdsad213213",
+          txid: TransactionHash,
+          account: sentFromaccount,
           amount: (values as any)?.BNB * 216.65 * 100,
         },
         {
@@ -100,16 +114,6 @@ const Sale = () => {
     } catch (error) {
       toast.error("Transaction failed");
     }
-  };
-  const handle_purchase = async () => {
-    // if ((values as any)?.BNB * 216.65 * 100 < 10000) {
-    //   return toast.error("Minimum purchase amount is 10000 RDZ");
-    // }
-    // if ((values as any)?.BNB * 216.65 * 100 > 50000) {
-    //   return toast.error("Maximum purchase amount is 50000 RDZ");
-    // } else {
-    // }
-    purchaseRequest();
   };
   const fetchLeftTokens = async () => {
     const { data, status } = await axios.get(
@@ -231,8 +235,7 @@ const Sale = () => {
               Buy RDZ tokens
             </h1>
             <h1 className="text-white text-sm my-2">
-
-              Available USDT Balance :  {isLoading?0:data.displayValue} USDT
+              Available USDT Balance : {isLoading ? 0 : data?.displayValue} USDT
             </h1>
             {show ? (
               <div className="flex w-full  bg-[#172042] rounded-md salecard">
@@ -355,24 +358,19 @@ const Sale = () => {
                 </div>
               </div>
             )}
-            {true ? (
+            {connectionStatus === "connected" ? (
               <>
-                <button
-                  type="submit"
-                  placeholder="Timer"
-                  className="disabled:cursor-not-allowed flex items-center gap-4 justify-center my-4 buy p-3 md:p-4 w-full text-white rounded-md text-sm "
-                >
+                <div className="disabled:cursor-not-allowed flex items-center gap-4 justify-center my-4 buy p-3 md:p-4 w-full text-white rounded-md text-sm ">
                   <Web3Button
+                    type="submit"
                     contractAddress={contractAddress}
                     action={() => {
-                    }
-                    }
+                    }}
                     className="!bg-[#EE3C99] "
                   >
                     Click To Purchase
                   </Web3Button>
-                </button>
-
+                </div>
               </>
             ) : (
               <button
