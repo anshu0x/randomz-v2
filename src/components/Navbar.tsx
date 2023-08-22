@@ -1,7 +1,6 @@
 import { Disclosure } from "@headlessui/react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ConnectWallet } from "@thirdweb-dev/react";
 
 const menu = [
   {
@@ -69,30 +68,6 @@ export default function Navbar() {
                     </Link>
                   ))}
                 </div>
-                {false ? (
-                  <button
-                    className="leading-3 hidden md:flex items-center mt-4 py-3 px-4 text-center rounded-md border-[#14E8B6] bg-[#C0317C] border text-white font-bold "
-                  >
-                    {/* {changeAddress?.slice(0, 6)}...{changeAddress?.slice(-4)} */}
-                  </button>
-                ) : (
-
-                  // <button
-                  //   className=" w-56 h-12 hidden md:flex items-center px-4 text-center rounded-md  bg-[#C0317C] text-white "
-                  // >
-                  //   <span>Connect wallet</span>
-                  //   <span className="ml-2">
-                  //     <img src="/assets/connectedwallet.svg" width={14} height={14} />
-                  //   </span>
-                  // </button>
-                  <>
-                    {/* <div className="mx-4 w-1/4">
-                      <ConnectWallet theme="dark" />
-                    </div> */}
-                  </>
-
-
-                )}
                 <div className={`flex md:hidden p-4 h-full items-center justify-between w-full md:w-auto  ${open ? " bg-[#090C18] " : " bg-transparent "} `}>
                   <img
                     src="/assets/randomz.png"
@@ -144,22 +119,6 @@ export default function Navbar() {
                       {item.label}
                     </Link>
                   ))}
-                  {false ? (
-                    <button
-                      className="leading-3 flex items-center mt-4 py-3 px-4 text-center rounded-md  bg-[#C0317C]  text-white font-bold "
-                    >
-                      {/* {changeAddress?.slice(0, 6)}...{changeAddress?.slice(-4)} */}
-                    </button>
-                  ) : (
-                    <button
-                      className="leading-3 flex items-center mt-4 py-3 px-4 text-center rounded-md  bg-[#C0317C]  text-white font-bold "
-                    >
-                      Connect wallet{" "}
-                      <span className="ml-2">
-                        <img src="/assets/walletconnect.svg" />
-                      </span>
-                    </button>
-                  )}
                 </div>
               </Disclosure.Panel>
             </>
