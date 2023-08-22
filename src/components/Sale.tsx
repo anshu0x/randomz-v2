@@ -127,7 +127,7 @@ const Sale = () => {
     }
   };
   useEffect(() => {
-    // Promise.allSettled([fetchUserAllocation(), fetchLeftTokens()]);
+    Promise.allSettled([fetchUserAllocation(), fetchLeftTokens()]);
   }, []);
   const copyToClipboard = () => {
     navigator.clipboard.writeText(referalLink);
