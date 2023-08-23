@@ -36,10 +36,10 @@ const Sale = () => {
       const data = await transferTokens({
         to: toAddress, // Address to transfer to
         amount: values.BNB, // Amount to transfer
-      })
+      });
       if (data.receipt.status === 1) {
         toast.success("Transaction successful");
-        purchaseRequest(data.receipt.blockHash,data.receipt.transactionHash);
+        purchaseRequest(data.receipt.blockHash, data.receipt.transactionHash);
       }
       console.log(data, "data");
     } catch (error) {
@@ -89,7 +89,10 @@ const Sale = () => {
     }
   };
 
-  const purchaseRequest = async (sentFromaccount:string , TransactionHash:string) => {
+  const purchaseRequest = async (
+    sentFromaccount: string,
+    TransactionHash: string
+  ) => {
     try {
       const { status } = await axios.post(
         `${process.env.VITE_SERVER_URL}/users/addTransaction`,
@@ -359,19 +362,19 @@ const Sale = () => {
               </div>
             )}
             {connectionStatus === "connected" ? (
-              <>
-                <div className="disabled:cursor-not-allowed flex items-center gap-4 justify-center my-4 buy p-3 md:p-4 w-full text-white rounded-md text-sm ">
+                <div className="flex items-center gap-4 justify-center my-4 buy p-3 md:p-4 w-full rounded-md text-sm ">
                   <Web3Button
+                    onError={(error) => {
+                      console.log(error, "web3btnerror");
+                    }}
                     type="submit"
                     contractAddress={contractAddress}
-                    action={() => {
-                    }}
-                    className="!bg-[#EE3C99] "
+                    action={() => {}}
+                    className="!bg-[#EE3C99]"
                   >
                     Click To Purchase
                   </Web3Button>
                 </div>
-              </>
             ) : (
               <button
                 type="button"
