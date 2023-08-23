@@ -13,6 +13,7 @@ import {
   Web3Button,
   useConnectionStatus,
 } from "@thirdweb-dev/react";
+import Loader from "./Loader";
 
 const Sale = () => {
   const connectionStatus = useConnectionStatus();
@@ -23,7 +24,6 @@ const Sale = () => {
   const [userAllocation, setUserAllocation] = useState(0);
   const [referalLink] = useState("https://randomz.com/E620001");
   const [showTransactionModal, setShowTransactionModal] = useState(false);
-
   const contractAddress = "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd";
   const toAddress = "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd";
   const { data, isLoading } = useBalance(contractAddress);
@@ -112,7 +112,6 @@ const Sale = () => {
         openWalletConnect();
         fetchUserAllocation();
         fetchLeftTokens();
-        return toast.success("Transaction successful");
       }
     } catch (error) {
       toast.error("Transaction failed");
