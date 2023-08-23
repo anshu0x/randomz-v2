@@ -13,7 +13,6 @@ import {
   Web3Button,
   useConnectionStatus,
 } from "@thirdweb-dev/react";
-import Loader from "./Loader";
 
 const Sale = () => {
   const connectionStatus = useConnectionStatus();
